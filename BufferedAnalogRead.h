@@ -59,6 +59,9 @@ class BufferedAnalogRead :public BaseAnalogRead
     // Retrieve the buffer size
     byte BufferSize() { return _BufferSize; }
 
+    // Reset the object.
+    void Clear() { Init(_BufferSize); }
+
     // Set the buffer size. To remain efficient,
     // this is restricted to powers of two up to MAX_BUFFER_SIZE.
     //
@@ -87,14 +90,17 @@ class BufferedAnalogRead :public BaseAnalogRead
     // and the buffer is at capacity.
     virtual void Event_ReplaceValue(int aOldValue, int aNewValue, byte aIndex) {}
     
+    // This method is triggered when the object should be reset.
+    // Descendents should override this if they maintain
+    // additional information.
+    virtual void Event_Reset() {}
+
     // Get the current index of the head of the circular buffer.
     // Note that this is not guaranteed to be correct when updating 
     // during a read.
     byte Head() { return _Head; }
 
   private:
-    // Power-of-two buffer size, in number of bits
-    byte _BufferPower;
     // The current buffer size.
     byte _BufferSize;
     // The current number of items in the buffer. 
@@ -103,7 +109,9 @@ class BufferedAnalogRead :public BaseAnalogRead
     byte _Head;
 
     void AddToBuffer(int aValue);
+    void FlushBuffer();
     void Init(const byte aBufferPower);
+    void Reset();
 };
 
 #endif // BUFFERED_ANALOG_READ_H

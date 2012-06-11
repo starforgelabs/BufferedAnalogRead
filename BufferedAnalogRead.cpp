@@ -40,18 +40,20 @@ void BufferedAnalogRead::AddToBuffer(int aValue)
   Event_ReplaceValue(lOldValue, aValue, _Head);
 }
 
-void BufferedAnalogRead::Init(const byte aBufferSize)
+void BufferedAnalogRead::FlushBuffer()
 {
-  _BufferSize = aBufferSize;
-
-  _Count = 0;
-  _Head = 0;
-
-  // Clear buffer
   for(int i=0; i<_BufferSize; i++)
     _Buffer[i] = 0;
 
   Event_FlushBuffers();
+}
+
+void BufferedAnalogRead::Init(const byte aBufferSize)
+{
+  _BufferSize = aBufferSize;
+
+  Reset();
+  FlushBuffer();
 }
 
 int BufferedAnalogRead::Read()
@@ -59,6 +61,14 @@ int BufferedAnalogRead::Read()
   BaseAnalogRead::Read();
   AddToBuffer(Reading);
   return Reading;
+}
+
+void BufferedAnalogRead::Reset()
+{
+  _Count = 0;
+  _Head = 0;
+
+  Event_Reset();
 }
 
 bool BufferedAnalogRead::setBufferSize(byte aSize)
