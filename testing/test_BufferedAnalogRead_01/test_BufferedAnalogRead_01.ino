@@ -99,8 +99,7 @@ test(clear)
   // Fill with data
   for(int i=0; i<1024; i++)
   {
-    tester.Reading = i+1;
-    int val = tester.Read();
+    int val = tester.Read(i+1);
   }
   
   tester.ClearCounters();
@@ -147,6 +146,18 @@ test(good_buffer_size)
   }
 }
 
+test(is_enabled)
+{
+  tester.Clear();
+  tester.IsEnabled = false;
+  for(int i=0; i<1024; i++)
+    tester.Read(i);
+  tester.IsEnabled = true;
+
+  assertEquals(0, tester.Count());
+  assertEquals(0, tester.Head());
+}
+
 test(read)
 {
   tester.setBufferSize(DEFAULT_BUFFER_SIZE);
@@ -154,12 +165,11 @@ test(read)
   
   for(int i=0; i<1024; i++)
   {
-    tester.Reading = i;
-    int val = tester.Read();
+    int val = tester.Read(i);
     int idx = tester.Head();
     
     assertEquals(i, val);
-    assertEquals(i, tester.Reading);
+    assertEquals(i, tester.Value);
     assertEquals(i % DEFAULT_BUFFER_SIZE, idx);
     assertEquals(i, lBuffer[idx]);
   }
@@ -171,8 +181,7 @@ test(value_events)
   tester.ClearCounters();
   for(int i=0; i<1024; i++)
   {
-    tester.Reading = i;
-    tester.Read();
+    tester.Read(i);
     
     int count = i+1;
     if(count <= tester.BufferSize())
@@ -200,7 +209,6 @@ test(value_events)
 
 void setup()
 {
-  tester.Enabled = false;
 }
 
 void loop()

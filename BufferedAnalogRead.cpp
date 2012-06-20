@@ -1,6 +1,5 @@
 /*
  *  BufferedAnalogRead.cpp
- *  Sun Tracker
  *
  *  Created by 治永夢守 on 12/05/27.
  *  Copyright 2012 James Knowles. All rights reserved.
@@ -9,6 +8,8 @@
  * Attribution-ShareAlike 3.0 Unported License.
  *
  * https://creativecommons.org/licenses/by-sa/3.0/
+ *
+ * This code is strictly "as is". Use at your own risk. 
  *
  *
  */
@@ -58,9 +59,11 @@ void BufferedAnalogRead::Init(const byte aBufferSize)
 
 int BufferedAnalogRead::Read()
 {
+  if(!IsEnabled) return Value;
+  
   BaseAnalogRead::Read();
-  AddToBuffer(Reading);
-  return Reading;
+  AddToBuffer(Value);
+  return Value;
 }
 
 void BufferedAnalogRead::Reset()

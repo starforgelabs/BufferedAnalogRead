@@ -1,6 +1,5 @@
 //
 //  BufferedAnalogRead.h
-//  Sun Tracker
 //
 //  Created by 治永夢守 on 12/06/03.
 //  Copyright 2012 James Knowles. All rights reserved.
@@ -10,6 +9,7 @@
 //
 // https://creativecommons.org/licenses/by-sa/3.0/
 //
+// This code is strictly "as is". Use at your own risk. 
 //
 //
 
@@ -55,6 +55,7 @@ class BufferedAnalogRead :public BaseAnalogRead
 
     // Extend the functionality of Read() to use a buffer.
     int Read();
+    int Read(const int aValue) { return BaseAnalogRead::Read(aValue); }
 
     // Retrieve the buffer size
     byte BufferSize() { return _BufferSize; }
